@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet } from 'react-router-dom';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { fetchFilmsId } from '../../userService';
 
@@ -46,7 +46,15 @@ export default function MovieDetailsPage() {
           <NavLink to="reviews">Reviews</NavLink>
         </li>
       </ul>
-      <Outlet />
+      <Suspense
+        fallback={
+          <p>
+            <b>Loading ...</b>
+          </p>
+        }
+      >
+        <Outlet />
+      </Suspense>
     </div>
   );
 }

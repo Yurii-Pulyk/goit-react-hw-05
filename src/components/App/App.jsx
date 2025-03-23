@@ -1,18 +1,13 @@
-import { Routes, Route, NavLink } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-import clsx from 'clsx';
-import HomePage from '../../pages/HomePage';
+import { lazy, Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import AppHeader from '../AppHeader/AppHeader';
-import MoviesPage from '../../pages/MoviesPage';
-import MovieDetailsPage from '../../pages/MovieDetailsPage';
-import NotFoundPage from '../../pages/NotFoundPage';
-import { Suspense } from 'react';
+import MovieCast from '../MovieCast/MovieCast';
+import MovieReviews from '../MovieReview/MovieReview';
 
-// const buildLinkClass = ({ isActive }) => {
-//   return clsx(css.link, isActive && css.active);
-// };
-// const { genreId, authorName } = useParams();
-// console.log(genreId, authorName);
+const HomePage = lazy(() => import('../../pages/HomePage'));
+const MovieDetailsPage = lazy(() => import('../../pages/MovieDetailsPage'));
+const MoviesPage = lazy(() => import('../../pages/MoviesPage'));
+const NotFoundPage = lazy(() => import('../../pages/NotFoundPage'));
 
 export default function App() {
   return (
@@ -28,10 +23,11 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/movies" element={<MoviesPage />} />
-          <Route path="/movies/:movieId" element={<MovieDetailsPage />} />
-          {/* <Route path="/products/:productId" element={<ProductDetails />} />
-          <Route path="/movies/:movieId/cast" element={<MovieCast />} />
-          <Route path="/movies/:movieId/reviews" element={<MovieReviews />} /> */}
+          <Route path="/movies/:movieId" element={<MovieDetailsPage />}>
+            <Route path="cast" element={<MovieCast />} />
+            <Route path="reviews" element={<MovieReviews />} />
+          </Route>
+
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>

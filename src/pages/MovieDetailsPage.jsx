@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { fetchFilmsId } from '../../userService';
@@ -37,6 +37,16 @@ export default function MovieDetailsPage() {
       <p>
         <strong>Rating:</strong> {movie.vote_average}
       </p>
+      <p>Additional information</p>
+      <ul>
+        <li>
+          <NavLink to="cast">Cast</NavLink>
+        </li>
+        <li>
+          <NavLink to="reviews">Reviews</NavLink>
+        </li>
+      </ul>
+      <Outlet />
     </div>
   );
 }

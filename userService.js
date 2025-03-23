@@ -11,7 +11,6 @@ const headers = {
   },
 };
 
-// Отримання популярних фільмів
 export const fetchTrendingFilms = async () => {
   try {
     const response = await axios.get(
@@ -28,7 +27,6 @@ export const fetchTrendingFilms = async () => {
   }
 };
 
-// Отримання деталей про фільм
 export const fetchFilmsId = async movieId => {
   try {
     const response = await axios.get(
@@ -42,5 +40,53 @@ export const fetchFilmsId = async movieId => {
       error.response?.data || error.message
     );
     return null;
+  }
+};
+
+export const fetchCast = async movieId => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/movie/${movieId}/credits?language=en-US`,
+      headers
+    );
+    return response.data.cast;
+  } catch (error) {
+    console.error(
+      'Error fetching cast details:',
+      error.response?.data || error.message
+    );
+    return [];
+  }
+};
+
+export const fetchReviews = async movieId => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/movie/${movieId}/reviews?language=en-US&page=1`,
+      headers
+    );
+    return response.data.results;
+  } catch (error) {
+    console.error(
+      'Error fetching movie reviews:',
+      error.response?.data || error.message
+    );
+    return [];
+  }
+};
+
+export const fetchMovies = async query => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/search/movie?query=${query}&include_adult=false&language=en-US&page=1`,
+      headers
+    );
+    return response.data.results;
+  } catch (error) {
+    console.error(
+      'Error fetching movies:',
+      error.response?.data || error.message
+    );
+    return [];
   }
 };

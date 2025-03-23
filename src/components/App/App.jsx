@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import AppHeader from '../AppHeader/AppHeader';
+import AppHeader from '../Navigation/Navigation';
 import css from './App.module.css';
 
 const HomePage = lazy(() => import('../../pages/HomePage'));
@@ -8,7 +8,7 @@ const MovieDetailsPage = lazy(() => import('../../pages/MovieDetailsPage'));
 const MoviesPage = lazy(() => import('../../pages/MoviesPage'));
 const NotFoundPage = lazy(() => import('../../pages/NotFoundPage'));
 const MovieCast = lazy(() => import('../MovieCast/MovieCast'));
-const MovieReviews = lazy(() => import('../MovieReview/MovieReview'));
+const MovieReviews = lazy(() => import('../MovieReview/MovieReviews'));
 export default function App() {
   return (
     <div className={css.appContainer}>

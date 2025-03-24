@@ -1,49 +1,53 @@
-import { useState } from 'react';
-import { fetchMovies } from '../../userService';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import MovieList from '../components/MovieList/MovieList';
+import { fetchMovies } from '../../userService';
 
 export default function MoviesPage() {
-  const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
 
-  const handleSearch = async () => {
-    if (!query.trim()) return;
-    const results = await fetchMovies(query);
-    setMovies(results);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') ?? '';
+  const [inputValue, setInputValue] = useState(query);
+
+  useEffect(() => {
+    if (!query) return;
+
+    async function getMovies() {
+      try {
+        setIsLoading(true);
+        setError(false);
+        const data = await fetchMovies(query);
+        setMovies(data);
+      } catch {
+        setError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    getMovies();
+  }, [query]);
+
+  const changeSearchText = event => {
+    setInputValue(event.target.value);
   };
 
-  const inputStyle = {
-    padding: '11px',
-    fontSize: '16px',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    outline: 'none',
-  };
-
-  const buttonStyle = {
-    padding: '0px 12px',
-    fontSize: '16px',
-    border: '1px solid #007bff',
-    borderRadius: '4px',
-    backgroundColor: '#007bff',
-    color: '#fff',
-    cursor: 'pointer',
-    marginLeft: '10px',
-    height: '40px',
+  const handleSearch = () => {
+    if (!inputValue.trim()) return;
+    setSearchParams({ query: inputValue });
   };
 
   return (
-    <div>
-      <input
-        style={inputStyle}
-        type="text"
-        value={query}
-        onChange={e => setQuery(e.target.value)}
-      />
-      <button style={buttonStyle} onClick={handleSearch}>
-        Search
-      </button>
-      <MovieList movies={movies} />
-    </div>
+    <>
+      <input type="text" value={inputValue} onChange={changeSearchText} />
+      <button onClick={handleSearch}>Search</button>
+
+      {isLoading && <b>Loading movies...</b>}
+      {error && <b>Whoops, there was an error. Please reload the page...</b>}
+      {movies.length > 0 && <MovieList movies={movies} />}
+    </>
   );
 }
